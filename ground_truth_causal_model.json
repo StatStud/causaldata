@@ -1,0 +1,351 @@
+{
+  "true_dag": {
+    "nodes": [
+      "China_Revenue_Percent",
+      "US_Revenue_Percent",
+      "Europe_Revenue_Percent",
+      "Supply_Chain_Risk_Score",
+      "Regulatory_Risk_Score",
+      "Market_Risk_Score",
+      "Cyber_Risk_Score",
+      "Governance_Score",
+      "Carbon_Emissions_Score",
+      "EBITDA_Margin",
+      "Revenue_Growth_YoY",
+      "Debt_to_Equity",
+      "M_and_A_Event",
+      "Major_Product_Launch",
+      "Regulatory_Change_Event",
+      "Supplier_Concentration",
+      "Customer_Concentration",
+      "Monthly_Return"
+    ],
+    "edges": [
+      [
+        "China_Revenue_Percent",
+        "Supply_Chain_Risk_Score"
+      ],
+      [
+        "China_Revenue_Percent",
+        "Regulatory_Risk_Score"
+      ],
+      [
+        "China_Revenue_Percent",
+        "Supplier_Concentration"
+      ],
+      [
+        "China_Revenue_Percent",
+        "Revenue_Growth_YoY"
+      ],
+      [
+        "US_Revenue_Percent",
+        "Regulatory_Risk_Score"
+      ],
+      [
+        "US_Revenue_Percent",
+        "Cyber_Risk_Score"
+      ],
+      [
+        "Supply_Chain_Risk_Score",
+        "Supplier_Concentration"
+      ],
+      [
+        "Supply_Chain_Risk_Score",
+        "EBITDA_Margin"
+      ],
+      [
+        "Supply_Chain_Risk_Score",
+        "Market_Risk_Score"
+      ],
+      [
+        "Regulatory_Risk_Score",
+        "EBITDA_Margin"
+      ],
+      [
+        "Market_Risk_Score",
+        "Monthly_Return"
+      ],
+      [
+        "Cyber_Risk_Score",
+        "Market_Risk_Score"
+      ],
+      [
+        "Governance_Score",
+        "Carbon_Emissions_Score"
+      ],
+      [
+        "Governance_Score",
+        "Regulatory_Risk_Score"
+      ],
+      [
+        "Governance_Score",
+        "Monthly_Return"
+      ],
+      [
+        "Carbon_Emissions_Score",
+        "EBITDA_Margin"
+      ],
+      [
+        "EBITDA_Margin",
+        "Debt_to_Equity"
+      ],
+      [
+        "EBITDA_Margin",
+        "Monthly_Return"
+      ],
+      [
+        "Revenue_Growth_YoY",
+        "Debt_to_Equity"
+      ],
+      [
+        "Revenue_Growth_YoY",
+        "Monthly_Return"
+      ],
+      [
+        "M_and_A_Event",
+        "Revenue_Growth_YoY"
+      ],
+      [
+        "M_and_A_Event",
+        "Monthly_Return"
+      ],
+      [
+        "Major_Product_Launch",
+        "Revenue_Growth_YoY"
+      ],
+      [
+        "Major_Product_Launch",
+        "Monthly_Return"
+      ],
+      [
+        "Supplier_Concentration",
+        "Market_Risk_Score"
+      ],
+      [
+        "Customer_Concentration",
+        "Market_Risk_Score"
+      ]
+    ]
+  },
+  "structural_equations": {
+    "Supply_Chain_Risk_Score": {
+      "function": "linear",
+      "parents": [
+        "China_Revenue_Percent"
+      ],
+      "coefficients": [
+        0.6
+      ],
+      "intercept": 0.2,
+      "noise_std": 0.1,
+      "bounds": [
+        0,
+        1
+      ]
+    },
+    "Regulatory_Risk_Score": {
+      "function": "linear",
+      "parents": [
+        "China_Revenue_Percent",
+        "US_Revenue_Percent",
+        "Governance_Score"
+      ],
+      "coefficients": [
+        0.4,
+        0.3,
+        -0.002
+      ],
+      "intercept": 0.25,
+      "noise_std": 0.12,
+      "bounds": [
+        0,
+        1
+      ]
+    },
+    "Cyber_Risk_Score": {
+      "function": "nonlinear",
+      "parents": [
+        "US_Revenue_Percent"
+      ],
+      "noise_std": 0.1,
+      "bounds": [
+        0,
+        1
+      ]
+    },
+    "Carbon_Emissions_Score": {
+      "function": "nonlinear",
+      "parents": [
+        "Governance_Score"
+      ],
+      "noise_std": 8,
+      "bounds": [
+        0,
+        100
+      ]
+    },
+    "EBITDA_Margin": {
+      "function": "interaction",
+      "parents": [
+        "Supply_Chain_Risk_Score",
+        "Regulatory_Risk_Score",
+        "Carbon_Emissions_Score",
+        "Governance_Score"
+      ],
+      "base_margin": 0.25,
+      "main_effects": [
+        -0.15,
+        -0.1,
+        -0.001,
+        0.002
+      ],
+      "interaction_terms": {
+        "Supply_Chain_Risk_Score__X__Regulatory_Risk_Score": -0.08
+      },
+      "noise_std": 0.03,
+      "bounds": [
+        0.05,
+        0.6
+      ]
+    },
+    "Market_Risk_Score": {
+      "function": "interaction",
+      "parents": [
+        "Supplier_Concentration",
+        "Cyber_Risk_Score",
+        "Supply_Chain_Risk_Score",
+        "Customer_Concentration"
+      ],
+      "coefficients": [
+        0.3,
+        0.25,
+        0.35,
+        0.2
+      ],
+      "interaction_terms": {
+        "Supplier_Concentration__X__Supply_Chain_Risk_Score": 0.4
+      },
+      "intercept": 0.2,
+      "noise_std": 0.1,
+      "bounds": [
+        0,
+        1
+      ]
+    },
+    "Monthly_Return": {
+      "function": "complex",
+      "parents": [
+        "EBITDA_Margin",
+        "Revenue_Growth_YoY",
+        "Market_Risk_Score",
+        "M_and_A_Event",
+        "Major_Product_Launch",
+        "Governance_Score"
+      ],
+      "base_return": 0.01,
+      "coefficients": [
+        0.08,
+        0.05,
+        -0.06,
+        0.02,
+        0.015,
+        0.0002
+      ],
+      "volatility_parents": [
+        "Market_Risk_Score"
+      ],
+      "volatility_coefficients": [
+        0.15
+      ],
+      "noise_std": 0.025,
+      "bounds": [
+        -0.3,
+        0.3
+      ]
+    }
+  },
+  "true_counterfactuals": {
+    "apple_china_reduction": {
+      "original_mean": 0.001938389854861083,
+      "counterfactual_mean": 0.015368569228897046,
+      "true_effect": 0.013430179374035962,
+      "sample_size": 36,
+      "description": "Apple reduces China exposure from 35% to 10%"
+    },
+    "tech_cyber_increase": {
+      "original_mean": -0.0004896851234821292,
+      "counterfactual_mean": -0.003548588163552014,
+      "true_effect": -0.003058903040069885,
+      "sample_size": 1260,
+      "description": "Technology sector cyber risk increase by 50%"
+    },
+    "financial_governance_improvement": {
+      "original_mean": -0.002553748080854519,
+      "counterfactual_mean": 0.011606616223388735,
+      "true_effect": 0.014160364304243254,
+      "sample_size": 144,
+      "description": "Financial sector governance score improvement to 85"
+    },
+    "supply_chain_shock": {
+      "original_mean": -0.00020861728421919516,
+      "counterfactual_mean": -0.007804867203113962,
+      "true_effect": -0.007596249918894767,
+      "sample_size": 1800,
+      "description": "Global supply chain risk increase to 0.8"
+    }
+  },
+  "test_interventions": {
+    "apple_china_reduction": {
+      "description": "Apple reduces China exposure from 35% to 10%",
+      "filter": {
+        "ticker": "AAPL"
+      },
+      "intervention": {
+        "China_Revenue_Percent": 0.1
+      },
+      "expected_pathways": [
+        "China_Revenue_Percent \u2192 Supply_Chain_Risk_Score \u2192 EBITDA_Margin \u2192 Monthly_Return",
+        "China_Revenue_Percent \u2192 Revenue_Growth_YoY \u2192 Monthly_Return"
+      ]
+    },
+    "tech_cyber_increase": {
+      "description": "Technology sector cyber risk increase by 50%",
+      "filter": {
+        "sector": "Technology"
+      },
+      "intervention": {
+        "Cyber_Risk_Score": "multiply_by_1.5"
+      },
+      "intervention_function": "<function FinancialCausalDataGenerator._define_test_interventions.<locals>.<lambda> at 0x106c8d440>",
+      "expected_pathways": [
+        "Cyber_Risk_Score \u2192 Market_Risk_Score \u2192 Monthly_Return"
+      ]
+    },
+    "financial_governance_improvement": {
+      "description": "Financial sector governance score improvement to 85",
+      "filter": {
+        "sector": "Financials"
+      },
+      "intervention": {
+        "Governance_Score": 85
+      },
+      "expected_pathways": [
+        "Governance_Score \u2192 Carbon_Emissions_Score \u2192 EBITDA_Margin \u2192 Monthly_Return",
+        "Governance_Score \u2192 Regulatory_Risk_Score \u2192 EBITDA_Margin \u2192 Monthly_Return"
+      ]
+    },
+    "supply_chain_shock": {
+      "description": "Global supply chain risk increase to 0.8",
+      "filter": {
+        "all_companies": true
+      },
+      "intervention": {
+        "Supply_Chain_Risk_Score": 0.8
+      },
+      "expected_pathways": [
+        "Supply_Chain_Risk_Score \u2192 EBITDA_Margin \u2192 Monthly_Return",
+        "Supply_Chain_Risk_Score \u2192 Market_Risk_Score \u2192 Monthly_Return"
+      ]
+    }
+  }
+}
